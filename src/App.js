@@ -2,45 +2,58 @@ import React, { useState } from "react";
 import { initialValues, validationSchema } from "./validation";
 import "./app.css";
 import { useFormik } from "formik";
+import axios from "axios";
 const App = () => {
-
   const [checkBox, setCheckBox] = useState(false);
-  const [typeError, setTypeError] = useState('')
+  const [typeError, setTypeError] = useState("");
 
   const submittedd = async (values) => {
     const formData = new FormData();
-    formData.append("first_name", values.firstName)
-    formData.append("last_name", values.lastName)
-    formData.append("email", values.email)
-    formData.append("dob", values.DateOfBirth)
-    formData.append("c_address_s1", values.StreetOne)
-    formData.append("c_address_s2", values.StreetTwo)
-    formData.append("is_permanent_current_add", Number(checkBox))
-    formData.append("p_address_s1", values.StreetPermanentOne)
-    formData.append("p_address_s2", values.StreetPermanentTwo)
+    formData.append("first_name", values.firstName);
+    formData.append("last_name", values.lastName);
+    formData.append("email", values.email);
+    formData.append("dob", values.DateOfBirth);
+    formData.append("c_address_s1", values.StreetOne);
+    formData.append("c_address_s2", values.StreetTwo);
+    formData.append("is_permanent_current_add", Number(checkBox));
+    formData.append("p_address_s1", values.StreetPermanentOne);
+    formData.append("p_address_s2", values.StreetPermanentTwo);
     values?.file?.forEach((element, i) => {
-      formData.append(`documents[${i}][document_name]`, element?.fileName)
-      formData.append(`documents[${i}][document_type]`, element?.fileType)
-      formData.append(`documents[${i}][document_file]`, element?.fileSelect)
+      formData.append(`documents[${i}][document_name]`, element?.fileName);
+      formData.append(`documents[${i}][document_type]`, element?.fileType);
+      formData.append(`documents[${i}][document_file]`, element?.fileSelect);
     });
-    const response = await fetch('https://reactjsmachinetestapi.xicom.us/api/v1/user/document-submit', {
-      method: "POST",
-      body: formData,
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'multipart/form-data'
-      }
-    })
-    const data = await response.json();
-    console.log(data);
-  }
 
-  const { values, handleChange, errors, touched, handleBlur, handleSubmit, setFieldValue, setFieldTouched, setErrors } =
-    useFormik({
-      initialValues: initialValues,
-      validationSchema: validationSchema,
-      onSubmit: submittedd
-    });
+    console.log(formData.get('firstName'), "hh")
+
+    try {
+      const response = await axios.post("https://reactjsmachinetestapi.xicom.us/v1/user/document-submit", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        }
+      });
+
+      console.log(response, "response")
+    } catch (error) {
+      console.log(error)
+    }
+  };
+
+  const {
+    values,
+    handleChange,
+    errors,
+    touched,
+    handleBlur,
+    handleSubmit,
+    setFieldValue,
+    setFieldTouched,
+    setErrors,
+  } = useFormik({
+    initialValues: initialValues,
+    validationSchema: validationSchema,
+    onSubmit: submittedd,
+  });
 
   const handleCheckedBox = (e) => {
     setCheckBox(e.target.checked);
@@ -54,14 +67,12 @@ const App = () => {
   };
 
   const handleFileSelector = (index, event, namee) => {
-    if (event.target.files[0].type?.includes(values.file[index].fileType)) {
-      setTypeError(null)
+    if (event?.target?.files?.[0]?.type?.includes?.(values?.file?.[index]?.fileType)) {
+      setTypeError(null);
       setFieldValue(`file[${index}].${namee}`, event.target.files[0]);
+    } else {
+      setTypeError("file type is not match");
     }
-    else {
-      setTypeError("file type is not match")
-    }
-
   };
 
   const handleFileNameChange = (index, event, namee) => {
@@ -74,7 +85,15 @@ const App = () => {
 
   return (
     <div className="container-form">
-      <form action="" className="form-box" onSubmit={(e) => { e.preventDefault(); if (values.file?.length > 1) handleSubmit(e); else alert("two file is required") }} >
+      <form
+        action=""
+        className="form-box"
+        onSubmit={(e) => {
+          e.preventDefault();
+          if (values.file?.length > 1) handleSubmit(e);
+          else alert("two file is required");
+        }}
+      >
         <div>
           <div className="box">
             <div>
@@ -90,7 +109,6 @@ const App = () => {
                 value={values.firstName}
                 onChange={handleChange}
                 onBlur={handleBlur}
-
               />
               {touched.firstName && errors.firstName ? (
                 <p>{errors.firstName}</p>
@@ -109,7 +127,6 @@ const App = () => {
                 value={values.lastName}
                 onChange={handleChange}
                 onBlur={handleBlur}
-
               />
               {touched.lastName && errors.lastName ? (
                 <p>{errors.lastName}</p>
@@ -130,7 +147,6 @@ const App = () => {
                 value={values.email}
                 onChange={handleChange}
                 onBlur={handleBlur}
-
               />
               {touched.email && errors.email ? <p>{errors.email}</p> : null}
             </div>
@@ -147,7 +163,6 @@ const App = () => {
                 placeholder="Enter Date of Birth here..."
                 onChange={handleChange}
                 onBlur={handleBlur}
-
               />
               {touched.DateOfBirth && errors.DateOfBirth ? (
                 <p>{errors.DateOfBirth}</p>
@@ -168,7 +183,6 @@ const App = () => {
                 value={values.StreetOne}
                 onChange={handleChange}
                 onBlur={handleBlur}
-
               />
               {touched.StreetOne && errors.StreetOne ? (
                 <p>{errors.StreetOne}</p>
@@ -186,7 +200,6 @@ const App = () => {
                 value={values.StreetTwo}
                 onChange={handleChange}
                 onBlur={handleBlur}
-
               />
               {touched.StreetTwo && errors.StreetTwo ? (
                 <p>{errors.StreetTwo}</p>
@@ -235,7 +248,9 @@ const App = () => {
               />
             </div>
           </div>
-
+          <div>
+            <h1>Upload Documents</h1>
+          </div>
           {values?.file?.map?.((e, index) => {
             return (
               <div className="box" key={index}>
@@ -248,11 +263,13 @@ const App = () => {
                     type="text"
                     name="fileName"
                     value={values?.file[index]?.fileName}
-                    onChange={(event) => handleFileNameChange(index, event, "fileName")}
+                    onChange={(event) =>
+                      handleFileNameChange(index, event, "fileName")
+                    }
                     onBlur={() => handleFileNameBlur(index, "fileName")}
-
                   />
-                  {touched?.file?.[index]?.fileName && errors?.file?.[index]?.fileName ? (
+                  {touched?.file?.[index]?.fileName &&
+                    errors?.file?.[index]?.fileName ? (
                     <p>{errors?.file?.[index]?.fileName}</p>
                   ) : null}
                 </div>
@@ -264,18 +281,19 @@ const App = () => {
                   <select
                     name="fileType"
                     value={values?.file[index]?.fileType}
-                    onChange={(event) => handleFileNameChange(index, event, "fileType")}
+                    onChange={(event) =>
+                      handleFileNameChange(index, event, "fileType")
+                    }
                     onBlur={() => handleFileNameBlur(index, "fileType")}
-
                   >
-
-                    <option>Select type of file</option>
-                    <option>pdf</option>
-                    <option>jpg</option>
-                    <option>jpeg</option>
-                    <option>png</option>
+                    <option value="">Select type of file</option>
+                    <option value="pdf">pdf</option>
+                    <option value="jpg">jpg</option>
+                    <option value="jpeg">jpeg</option>
+                    <option value="png">png</option>
                   </select>
-                  {touched?.file?.[index]?.fileType && errors?.file?.[index]?.fileType ? (
+                  {touched?.file?.[index]?.fileType &&
+                    errors?.file?.[index]?.fileType ? (
                     <p>{errors?.file?.[index]?.fileType}</p>
                   ) : null}
                 </div>
@@ -288,37 +306,50 @@ const App = () => {
                     type="file"
                     name="fileSelect"
                     // value={values?.file[index]?.fileSelect}
-                    onChange={(event) => handleFileSelector(index, event, "fileSelect")}
+                    onChange={(event) =>
+                      handleFileSelector(index, event, "fileSelect")
+                    }
                     onBlur={() => handleFileNameBlur(index, "fileSelect")}
-
                   />
-                  {typeError ? <p>{typeError}</p> : touched?.file?.[index]?.fileSelect && errors?.file?.[index]?.fileSelect ? (
+                  {typeError ? (
+                    <p>{typeError}</p>
+                  ) : touched?.file?.[index]?.fileSelect &&
+                    errors?.file?.[index]?.fileSelect ? (
                     <p>{errors?.file?.[index]?.fileSelect}</p>
                   ) : null}
                 </div>
                 <div>
-                  {(index == 0) ? <button
-                    className="add-btn"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setFieldValue("file", [...values.file, {}])
-                    }}
-                  >
-                    +
-                  </button> : <button
-                    className="delete-btn"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setFieldValue("file", values?.file?.filter((e, i) => i !== index))
-                    }}
-                  >
-                    -
-                  </button>}
+                  {index == 0 ? (
+                    <button
+                      className="add-btn"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setFieldValue("file", [...values.file, {}]);
+                      }}
+                    >
+                      +
+                    </button>
+                  ) : (
+                    <button
+                      className="delete-btn"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setFieldValue(
+                          "file",
+                          values?.file?.filter((e, i) => i !== index)
+                        );
+                      }}
+                    >
+                      -
+                    </button>
+                  )}
                 </div>
               </div>
             );
           })}
-          <button type="submit" className="btn">Submit</button>
+          <button type="submit" className="btn">
+            Submit
+          </button>
         </div>
       </form>
     </div>
