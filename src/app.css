@@ -1,0 +1,91 @@
+.container-form{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.container-form .form-box{
+  margin-top: 50px;
+   border: 2px solid grey;
+   border-radius: 10px; 
+   width: 550px;
+   padding: 40px;
+}
+
+.container-form .form-box .box{
+  display: flex;
+  align-items: center;
+  justify-content:space-between;
+  margin-bottom: 20px;
+}
+
+.container-form .form-box .box label{
+ font-size: 16px;
+}
+.input-box{
+  width: 100%;
+  height: 10px;
+  border-radius: 4px;
+  border: 2px solid gray;
+  padding: 10px;
+  font-size: 14px;
+}
+.input-checkBox{
+ height: 20px;
+ width: 30px;
+ padding: 20px;
+ border: 2px solid gray;
+}
+.container-form .form-box h1{
+  font-size: 18px;
+  font-weight: 500;
+}
+p{
+  color: red;
+}
+.container-form .form-box select{
+  width: 100%;
+  height: 30px;
+  border-radius: 4px;
+  border: 2px solid gray; 
+}
+span{
+  color: red;
+}
+input{
+  width:100px;
+  height: 20px;
+  border-radius: 4px;
+  border: 2px solid  gray;
+  padding:7px;
+}
+
+.add-btn{
+  width: 45px;
+  height: 45px;
+  background-color:rgb(35, 30, 30) ;
+  font-size: 30px;
+  font-weight: bold;
+  color: #fff;
+  border-radius: 4px;
+}
+
+.delete-btn{
+  width: 45px;
+  height: 45px;
+  background-color:rgb(176, 172, 172) ;
+  font-size: 30px;
+  font-weight: bold;
+  color: #fff;
+  border-radius: 4px;
+}
+
+.container-form form .btn{
+   margin:0 150px;
+  width: 150px;
+  height: 50px;
+  color: white;
+  font-size: 20px;
+  border-radius:7px;
+ background-color: rgb(35, 30, 30);
+}
